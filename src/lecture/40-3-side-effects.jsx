@@ -1,3 +1,4 @@
+import { A11yHidden } from '@/components';
 import { useEffect, useState } from 'react';
 
 const API = import.meta.env.VITE_PB_API;
@@ -5,7 +6,7 @@ const API = import.meta.env.VITE_PB_API;
 async function fetchProducts(options) {
   try {
     const response = await fetch(
-      `${API}/api/collections/products/records?page=2&perPage=2`,
+      `${API}/api/collections/products/records?page=1&perPage=5`,
       options
     );
     const data = await response.json();
@@ -18,14 +19,17 @@ async function fetchProducts(options) {
 }
 
 function Exercise() {
-  const [tableContents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [tableContents, setTableContents] = useState([]);
 
+  // 1번만 요청
   useEffect(() => {
     const controller = new AbortController();
 
-    fetchProducts({ signal: controller.signal }).then((data) =>
-      console.log(data)
-    );
+    fetchProducts({ signal: controller.signal }).then((data) => {
+      setTableContents(data?.items);
+      setIsLoading(false);
+    });
 
     // 신호를 통해 중복된 요청일 경우 웹 요청을 취소(abort)
     // 클린업
@@ -33,9 +37,13 @@ function Exercise() {
       // 네트워크 요청 취소
       controller.abort();
     };
-  });
+  }, []);
 
-  const tableContentsLegnth = tableContents.length;
+  const tableContentsLegnth = tableContents?.length;
+
+  if (isLoading) {
+    return <div role="alert">데이터 로딩 중...</div>;
+  }
 
   return (
     <div>
@@ -48,22 +56,36 @@ function Exercise() {
 }
 
 function DataTable({ contents }) {
+  const tableStyle = 'mt-2 border-2 border-solid border-indigo-600';
+  const borderStyle = 'p-2 border border-solid border-indigo-300';
+
   return (
-    <table className="border-2 border-solid border-indigo-600">
-      <caption>표 제목</caption>
+    <table className={tableStyle}>
+      <A11yHidden as="caption">표 제목</A11yHidden>
+      <col width="160" />
+      <col width="240" />
+      <col width="100" />
       <thead>
         <tr>
-          <th scope="col">셀 제목 1</th>
-          <th scope="col">셀 제목 2</th>
-          <th scope="col">셀 제목 3</th>
+          <th scope="col" className={borderStyle}>
+            ID
+          </th>
+          <th scope="col" className={borderStyle}>
+            TITLE
+          </th>
+          <th scope="col" className={borderStyle}>
+            COLOR
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>셀 내용 1</td>
-          <td>셀 내용 2</td>
-          <td>셀 내용 3</td>
-        </tr>
+        {contents?.map((content) => (
+          <tr key={content.id}>
+            <td className={borderStyle}>{content.id}</td>
+            <td className={borderStyle}>{content.title}</td>
+            <td className={borderStyle}>{content.color}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
@@ -71,7 +93,7 @@ function DataTable({ contents }) {
 
 function DataTableItemCount({ count }) {
   return (
-    <output className="mt-4 block p-4 border border-solid border-sky-600">
+    <output className="mt-2 block py-1 px-2 rounded border border-solid border-sky-600">
       {count}
     </output>
   );
