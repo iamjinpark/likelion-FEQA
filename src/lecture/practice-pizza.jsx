@@ -10,6 +10,10 @@ function Exercise() {
   );
 }
 
+// 체크박스랑 이미지랑 어떤식으로 연결을 할것인지 고민
+// useState 에 있는 데이터 값을 잘 건들이면됨
+// 연결해가지고 눌렀을때 false -> true , true 면 'block', 'hidden' 으로!
+
 /* -------------------------------------------------------------------------- */
 
 function FormControlExample() {
