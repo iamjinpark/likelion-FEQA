@@ -1,9 +1,10 @@
-import { useId, forwardRef } from 'react';
+import { useId } from 'react';
 import { A11yHidden } from '@/components';
 
-function FormInput(
+function AppInput(
   /* props */
   {
+    forwardRef = null,
     as: ComponentName = 'div',
     name,
     type = 'text',
@@ -16,9 +17,7 @@ function FormInput(
     hiddenLabel = false,
     inputProps = {},
     ...restProps
-  },
-  /* ref */
-  ref
+  }
 ) {
   const id = useId();
 
@@ -43,20 +42,18 @@ function FormInput(
     >
       {labelElement}
       <input
-        ref={ref}
+        ref={forwardRef}
         id={id}
         type={type}
         name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        className="focus:border-solid focus:border-indigo-500 focus:border-2"
         {...inputProps}
       />
     </ComponentName>
   );
 }
 
-// forwardRef 고차 함수 -> 고차 컴포넌트 내보내기
-// 상위 컴포넌트가 ref 속성을 전달해서
-// 컴포넌트 내부의 공개되지 않은 DOM 노드 접근
-export default forwardRef(FormInput);
+export default AppInput;
