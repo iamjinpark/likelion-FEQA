@@ -4,6 +4,7 @@
 .exercises
 .utils
 .next
+.typescript-config
 next-env.d.ts
 
 node_modules
@@ -17,4 +18,5 @@ NOTICE.md
 18.md
 18-*.md
 
-deferred-value
+14-deferred-value
+15-non-blocking-ui-update-state
