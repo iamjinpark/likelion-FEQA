@@ -1,8 +1,8 @@
-import Exercise from '@/lecture/non-blocking-ui-update-state/Expercise-05-finished';
+import Exercise from '@/lecture/non-blocking-ui-update-state/Expercise-01';
 import { getDocumentTitle } from '@/utils';
 import { Helmet } from 'react-helmet-async';
 
-export function Component() {
+function NonBlockUIPage() {
   return (
     <>
       <Helmet>
@@ -18,4 +18,4 @@ export function Component() {
   );
 }
 
-Component.displayName = 'NonBlockUIPage';
+export default NonBlockUIPage;
